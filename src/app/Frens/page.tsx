@@ -21,6 +21,8 @@ export default function Frens() {
         initWebApp();
     }, []);
 
+    console.log(initData, userId, startParam);
+
     return(
         <>
             <Referral initData={initData} userId={userId} startParam={startParam} />

@@ -33,6 +33,8 @@ export default function Profile() {
                     src={user.avatar}
                     alt="User Avatar"
                     className="w-24 h-24 rounded-full border-4 border-indigo-600 mb-4"
+                    width={96}
+                    height={96}
                 />
                 <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
                 <p className="text-lg font-medium mb-2">Level {user.level} 🛡️</p>
