@@ -16,6 +16,7 @@ export default function Frens() {
               setInitData(WebApp.initData);
               setUserId(WebApp.initDataUnsafe.user?.id.toString() || '');
               setStartParam(WebApp.initDataUnsafe.start_param || '');
+              console.log(WebApp.initDataUnsafe);
             }
           };
       
@@ -25,7 +26,7 @@ export default function Frens() {
 
     return(
         <>
-            {userId && (<Referral initData={initData} userId={userId} startParam={startParam} />)}
+            <Referral initData={initData} userId={userId} startParam={startParam} />
         </>
     )
 }
