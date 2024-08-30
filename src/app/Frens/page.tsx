@@ -10,22 +10,23 @@ export default function Frens() {
 
     useEffect(() => {
         const initWebApp = async () => {
-            if(typeof window !== "undefined") {
+            if (typeof window !== "undefined") {
                 const WebApp = (await import("@twa-dev/sdk")).default;
                 WebApp.ready();
                 setInitData(WebApp.initData);
-                setUserId(WebApp.initDataUnsafe.user?.id.toString() || "");
+                const userIdValue = WebApp.initDataUnsafe.user?.id.toString() || "";
+                console.log("User ID:", userIdValue);
+                setUserId(userIdValue);
                 setStartParam(WebApp.initDataUnsafe.start_param || "");
             }
-        }
+        };
         initWebApp();
     }, []);
-
-    console.log(initData, userId, startParam);
+    
 
     return(
         <>
-            <Referral initData={initData} userId={userId} startParam={startParam} />
+            {userId && (<Referral initData={initData} userId={userId} startParam={startParam} />)}
         </>
     )
 }
