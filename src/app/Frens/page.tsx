@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Referral from "../../../components/referralSystem";
+import Referral from "../components/referralSystem";
 
 export default function Frens() {
     const [initData, setInitData] = useState("");

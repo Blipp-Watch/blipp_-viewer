@@ -1,7 +1,7 @@
 "use client"
-import MainView from "../../components/MainView";
-import LoginView from "../../components/LoginView";
-import { VideoContextProvider } from "../../context/videoContext";
+import MainView from "./components/MainView";
+import LoginView from "./components/LoginView";
+import { VideoContextProvider } from "./context/videoContext";
 
 export default function Home() {
   let connected = true;
