@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Profile() {
     const user = {
         name: "BlippMaster99",
@@ -27,7 +29,7 @@ export default function Profile() {
         <div className="flex flex-col items-center justify-start w-full min-h-screen p-6 bg-gradient-to-b from-green-500 to-blue-500 text-white space-y-6">
             {/* Profile Header */}
             <div className="w-full max-w-md bg-white text-gray-800 rounded-lg shadow-lg p-6 flex flex-col items-center relative">
-                <img
+                <Image
                     src={user.avatar}
                     alt="User Avatar"
                     className="w-24 h-24 rounded-full border-4 border-indigo-600 mb-4"

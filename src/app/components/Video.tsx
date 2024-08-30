@@ -73,26 +73,21 @@ const Video: React.FC<VideoProps> = ({ video }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentContainerRef = containerRef.current;
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-          } else {
-            setIsInView(false);
-          }
-        });
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
       },
       { threshold: 0.5 }
     );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+  
+    if (currentContainerRef) {
+      observer.observe(currentContainerRef);
     }
-
+  
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (currentContainerRef) {
+        observer.unobserve(currentContainerRef);
       }
     };
   }, []);

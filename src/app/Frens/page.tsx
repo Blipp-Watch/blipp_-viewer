@@ -148,7 +148,7 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
               className="mx-auto"
             />
             <p className="mt-6 text-lg font-medium text-white">
-              You haven't referred anyone yet. Start sharing your code!
+              You haven&apos;t referred anyone yet. Start sharing your code!
             </p>
           </div>
         ) : (
