@@ -21,7 +21,7 @@ export default function Frens() {
           };
       
           initWebApp();
-        }, [])
+        }, [userId, startParam, initData]);
     
 
     return(
