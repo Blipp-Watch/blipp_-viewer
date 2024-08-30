@@ -7,6 +7,8 @@ export interface ReferralSystemProps {
   initData: string;
   userId: string;
   startParam: string;
+  referrer: string | null;
+  referrals: string[];
 }
 
 const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
