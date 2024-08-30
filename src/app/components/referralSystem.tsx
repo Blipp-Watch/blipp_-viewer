@@ -61,6 +61,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
           const data = await response.json();
           setReferrals(data.referrals || []); // Ensure referrals is an array
           setReferrer(data.referrer || null);
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching referrals: ", error);
         } finally {
