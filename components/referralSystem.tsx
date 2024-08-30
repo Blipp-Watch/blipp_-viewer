@@ -10,7 +10,6 @@ export interface ReferralSystemProps {
 }
 
 const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
-    console.log(initData, userId, startParam);
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
   const INVITE_URL = "https://t.me/blipp_official_bot/";
@@ -18,71 +17,63 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
   const [referralLevel, setReferralLevel] = useState(1);
   const [progress, setProgress] = useState(0);
 
-  const handleReferral = async () => {
-    const utils = initUtils();
-    const inviteLink = `${INVITE_URL}?start=${userId}`;
-    const shareText = `Join Blipp, watch videos and get rewarded!`;
-    const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`;
-    utils.openTelegramLink(fullUrl);
-  };
-
-  const handleCopyLink = () => {
-    const inviteLink = `${INVITE_URL}?startapp=${userId}`;
-    navigator.clipboard.writeText(inviteLink);
-    alert("Link copied to clipboard!");
-  };
 
   useEffect(() => {
     const checkReferral = async () => {
       if (startParam && userId) {
         try {
-          const response = await fetch(`/api/referrals`, {
-            method: "POST",
+          const response = await fetch('/api/referrals', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, referrerId: startParam }),
-            headers: {
-              "Content-Type": "application/json",
-            },
           });
-          if (!response.ok) {
-            throw new Error("Failed to refer a friend");
-          }
+          if (!response.ok) throw new Error('Failed to save referral');
         } catch (error) {
-          console.error(error);
+          console.error('Error saving referral:', error);
         }
       }
-    };
+    }
 
     const fetchReferrals = async () => {
       if (userId) {
         try {
           const response = await fetch(`/api/referrals?userId=${userId}`);
-          if (!response.ok) {
-            throw new Error("Failed to fetch referrals");
-          }
+          if (!response.ok) throw new Error('Failed to fetch referrals');
           const data = await response.json();
-          setReferrals(data.referrals || []);
-          setReferrer(data.referrer || null);
-          setLoading(false);
+          setReferrals(data.referrals);
+          setReferrer(data.referrer);
         } catch (error) {
-          console.error("Error fetching referrals: ", error);
-        } finally {
-          setLoading(false);
+          console.error('Error fetching referrals:', error);
         }
       }
-    };
-    
+    }
+
     checkReferral();
     fetchReferrals();
-  }, [userId, startParam]);
+  }, [userId, startParam])
 
-//   useEffect(() => {
-//     if (referrals) {
-//       // Update referral level and progress only when referrals is defined
-//       const newLevel = Math.floor(referrals.length / 5) + 1;
-//       setReferralLevel(newLevel);
-//       setProgress((referrals.length % 5) * 20);
-//     }
-//   }, [referrals]);
+  const handleInviteFriend = () => {
+    const utils = initUtils()
+    const inviteLink = `${INVITE_URL}?startapp=${userId}`
+    const shareText = `Join me on this awesome Telegram mini app!`
+    const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`
+    utils.openTelegramLink(fullUrl)
+  }
+
+  const handleCopyLink = () => {
+    const inviteLink = `${INVITE_URL}?startapp=${userId}`
+    navigator.clipboard.writeText(inviteLink)
+    alert('Invite link copied to clipboard!')
+  }
+
+  useEffect(() => {
+    if (referrals) {
+      // Update referral level and progress only when referrals is defined
+      const newLevel = Math.floor(referrals.length / 5) + 1;
+      setReferralLevel(newLevel);
+      setProgress((referrals.length % 5) * 20);
+    }
+  }, [referrals]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -111,7 +102,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
           </strong>
         </p>
         <button
-          onClick={handleReferral}
+          onClick={handleInviteFriend}
           className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg hover:shadow-2xl animate-pulse"
         >
           Share Referral
