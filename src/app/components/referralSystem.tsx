@@ -10,7 +10,6 @@ export interface ReferralSystemProps {
 }
 
 const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
-    console.log(initData, userId, startParam);
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
   const INVITE_URL = "https://t.me/blipp_official_bot/";
@@ -19,7 +18,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
 
   const handleReferral = async () => {
     const utils = initUtils();
-    const inviteLink = `${INVITE_URL}?start=${userId}`;
+    const inviteLink = `${INVITE_URL}?startapp=${userId}`;
     const shareText = `Join Blipp, watch videos and get rewarded!`;
     const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`;
     utils.openTelegramLink(fullUrl);
@@ -53,6 +52,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
 
     const fetchReferrals = async () => {
       if (userId) {
+        console.log("Fetching referrals for user: ", userId);
         try {
           const response = await fetch(`/api/referrals?userId=${userId}`);
           if (!response.ok) {
@@ -71,14 +71,13 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
     fetchReferrals();
   }, [userId, startParam]);
 
-//   useEffect(() => {
-//     if (referrals) {
-//       // Update referral level and progress only when referrals is defined
-//       const newLevel = Math.floor(referrals.length / 5) + 1;
-//       setReferralLevel(newLevel);
-//       setProgress((referrals.length % 5) * 20);
-//     }
-//   }, [referrals]);
+  useEffect(() => {
+    if (referrals) {
+      const newLevel = Math.floor(referrals.length / 5) + 1;
+      setReferralLevel(newLevel);
+      setProgress((referrals.length % 5) * 20);
+    }
+  }, [referrals]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-8 text-white">
