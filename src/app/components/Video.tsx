@@ -106,7 +106,7 @@ const Video: React.FC<VideoProps> = ({ video }) => {
   }, [isInView]);
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center justify-center relative bg-black w-screen h-screen">
+    <div ref={containerRef} className="flex flex-col items-center justify-center relative bg-gradient-to-r from-indigo-600 to-purple-600 w-screen h-screen">
       <div className="flex flex-col items-center justify-center w-full h-full">
         {isInView && (
           <iframe

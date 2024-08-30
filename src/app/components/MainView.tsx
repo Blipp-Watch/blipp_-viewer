@@ -18,8 +18,9 @@ export default function MainView() {
                     <b>Yay! You have seen it all</b>
                 </p>
             }
+            className="bg-gradient-to-r from-indigo-600 to-purple-600"
         >
-        <div className="snap-y snap-mandatory h-screen overflow-y-scroll">
+        <div className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-r from-indigo-600 to-purple-600">
             {
                 videos.length === 0 ? (
                     <div className="flex flex-col items-center justify-center w-full h-full">
@@ -28,9 +29,8 @@ export default function MainView() {
                 ) : 
                 videos.map((video, index) => {
                     return (
-                        <div key={index} className="snap-start w-screen h-screen">
+                        <div key={index} className="snap-start w-screen h-screen bg-gradient-to-r from-indigo-600 to-purple-600">
                             <Video video={video} />
-                            <BottomTabNavigator />
                         </div>
                     );
                 })

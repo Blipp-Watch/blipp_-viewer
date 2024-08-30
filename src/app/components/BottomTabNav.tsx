@@ -6,6 +6,8 @@ import { BiMoney } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { MdMap } from "react-icons/md";
 import { TbFriends } from "react-icons/tb";
+import { FaHome } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 export default function BottomTabNavigator(){
     const [value, setValue] = useState(0);
@@ -25,13 +27,13 @@ export default function BottomTabNavigator(){
                     router.push('/');
                     break;
                 case 1:
-                    router.push('/Friens');
+                    router.push('/Frens');
                     break;
                 case 2:
-                    router.push('/quests');
+                    router.push('/Quests');
                     break;
                 case 3:
-                    router.push('/profile');
+                    router.push('/Profile');
                     break;
                 default:
                     break;
@@ -40,7 +42,7 @@ export default function BottomTabNavigator(){
     };
 
     return(
-    <Box sx={{ width: "100%", zIndex:20, bottom:0, backgroundColor:"black", opacity:"20%" ,display:"flex", position:"absolute", paddingTop:1, paddingBottom:1, borderTopLeftRadius:15, borderTopRightRadius:15 }} >
+    <Box sx={{ width: "100%", zIndex:50, bottom:0, backgroundColor:"black", opacity:"80%" ,display:"flex", position:"fixed", paddingTop:1, paddingBottom:1, borderTopLeftRadius:15, borderTopRightRadius:15 }} >
       <BottomNavigation
         showLabels
         value={value}
@@ -49,8 +51,8 @@ export default function BottomTabNavigator(){
         }}
         style={{ width: "100%", backgroundColor:"black", opacity:20, borderTopLeftRadius:15, borderTopRightRadius:15}}
       >
-        <BottomNavigationAction label="Earn" icon={<BiMoney color="white" size={40}/>} />
-        <BottomNavigationAction label="Friends" icon={<TbFriends  color="white" size={40}/>} />
+        <BottomNavigationAction label="Earn" icon={<FaHome color="white" size={40}/>} />
+        <BottomNavigationAction label="Friends" icon={<FaPeopleGroup  color="white" size={40}/>} />
         <BottomNavigationAction label="Quests" icon={<MdMap  color="white" size={40}/>} />
         <BottomNavigationAction label="Profile" icon={<CgProfile  color="white" size={40}/>} />
       </BottomNavigation>
