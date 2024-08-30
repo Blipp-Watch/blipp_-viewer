@@ -14,7 +14,6 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
   const INVITE_URL = "https://t.me/blipp_official_bot/";
-  const [loading, setLoading] = useState<boolean>(true);
   const [referralLevel, setReferralLevel] = useState(1);
   const [progress, setProgress] = useState(0);
 
@@ -60,13 +59,10 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
             throw new Error("Failed to fetch referrals");
           }
           const data = await response.json();
-          setReferrals(data.referrals || []); // Ensure referrals is an array
+          setReferrals(data.referrals || []);
           setReferrer(data.referrer || null);
-          setLoading(false);
         } catch (error) {
           console.error("Error fetching referrals: ", error);
-        } finally {
-          setLoading(false);
         }
       }
     };
@@ -83,10 +79,6 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
 //       setProgress((referrals.length % 5) * 20);
 //     }
 //   }, [referrals]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-8 text-white">
