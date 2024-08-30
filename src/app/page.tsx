@@ -25,7 +25,6 @@ export default function Home() {
   }, []);
 
   return (
-    <TonConnectUIProvider manifestUrl="https://pait-interface.vercel.app/tonconnect-manifest.json">
       <VideoContextProvider>
         <main className="flex min-h-screen flex-col items-center justify-center items-center">
           <div className="z-10 w-full items-center justify-center font-mono text-sm lg:flex">
@@ -36,6 +35,5 @@ export default function Home() {
           </div>
         </main>
       </VideoContextProvider>
-    </TonConnectUIProvider>
   );
 }

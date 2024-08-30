@@ -16,7 +16,6 @@ export default function Friens() {
         setReferralCode(code);
     }, []);
 
-    // Simulate adding a referred friend (this would normally be done via a backend service)
     const handleAddFriend = () => {
         const newFriend: Friend = {
             id: uuid(),
