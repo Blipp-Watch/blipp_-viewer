@@ -31,56 +31,56 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
     alert("Link copied to clipboard!");
   };
 
-  useEffect(() => {
-    const checkReferral = async () => {
-      if (startParam && userId) {
-        try {
-          const response = await fetch(`/api/referrals`, {
-            method: "POST",
-            body: JSON.stringify({ userId, referrerId: startParam }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Failed to refer a friend");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
+//   useEffect(() => {
+//     const checkReferral = async () => {
+//       if (startParam && userId) {
+//         try {
+//           const response = await fetch(`/api/referrals`, {
+//             method: "POST",
+//             body: JSON.stringify({ userId, referrerId: startParam }),
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           });
+//           if (!response.ok) {
+//             throw new Error("Failed to refer a friend");
+//           }
+//         } catch (error) {
+//           console.error(error);
+//         }
+//       }
+//     };
 
-    const fetchReferrals = async () => {
-      if (userId) {
-        try {
-          const response = await fetch(`/api/referrals?userId=${userId}`);
-          if (!response.ok) {
-            throw new Error("Failed to fetch referrals");
-          }
-          const data = await response.json();
-          setReferrals(data.referrals || []); // Ensure referrals is an array
-          setReferrer(data.referrer || null);
-        } catch (error) {
-          console.error("Error fetching referrals: ", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
+//     const fetchReferrals = async () => {
+//       if (userId) {
+//         try {
+//           const response = await fetch(`/api/referrals?userId=${userId}`);
+//           if (!response.ok) {
+//             throw new Error("Failed to fetch referrals");
+//           }
+//           const data = await response.json();
+//           setReferrals(data.referrals || []); // Ensure referrals is an array
+//           setReferrer(data.referrer || null);
+//         } catch (error) {
+//           console.error("Error fetching referrals: ", error);
+//         } finally {
+//           setLoading(false);
+//         }
+//       }
+//     };
     
-    checkReferral();
-    fetchReferrals();
-  }, [userId, startParam]);
+//     checkReferral();
+//     fetchReferrals();
+//   }, [userId, startParam]);
 
-  useEffect(() => {
-    if (referrals) {
-      // Update referral level and progress only when referrals is defined
-      const newLevel = Math.floor(referrals.length / 5) + 1;
-      setReferralLevel(newLevel);
-      setProgress((referrals.length % 5) * 20);
-    }
-  }, [referrals]);
+//   useEffect(() => {
+//     if (referrals) {
+//       // Update referral level and progress only when referrals is defined
+//       const newLevel = Math.floor(referrals.length / 5) + 1;
+//       setReferralLevel(newLevel);
+//       setProgress((referrals.length % 5) * 20);
+//     }
+//   }, [referrals]);
 
   if (loading) {
     return <div>Loading...</div>;
