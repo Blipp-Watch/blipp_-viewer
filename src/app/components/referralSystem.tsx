@@ -12,7 +12,7 @@ export interface ReferralSystemProps {
 const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
-  const INVITE_URL = "https://t.me/blipp_official_bot/start";
+  const INVITE_URL = "https://t.me/blipp_official_bot/";
   const [loading, setLoading] = useState<boolean>(true);
   const [referralLevel, setReferralLevel] = useState(1);
   const [progress, setProgress] = useState(0);
@@ -26,7 +26,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
   };
 
   const handleCopyLink = () => {
-    const inviteLink = `${INVITE_URL}?start=${userId}`;
+    const inviteLink = `${INVITE_URL}?startapp=${userId}`;
     navigator.clipboard.writeText(inviteLink);
     alert("Link copied to clipboard!");
   };
@@ -49,12 +49,6 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
           console.error(error);
         }
       }
-
-      const response = await fetch(`/api/referrals?userId=${userId}`);
-      const data = await response.json();
-      setReferrals(data.referrals);
-      setReferrer(data.referrer);
-      setLoading(false);
     };
 
     const fetchReferrals = async () => {
@@ -65,10 +59,12 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
             throw new Error("Failed to fetch referrals");
           }
           const data = await response.json();
-          setReferrals(data.referrals);
-          setReferrer(data.referrer);
+          setReferrals(data.referrals || []); // Ensure referrals is an array
+          setReferrer(data.referrer || null);
         } catch (error) {
           console.error("Error fetching referrals: ", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -78,10 +74,12 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
   }, [userId, startParam]);
 
   useEffect(() => {
-    // Update referral level and progress
-    const newLevel = Math.floor(referrals.length / 5) + 1;
-    setReferralLevel(newLevel);
-    setProgress((referrals.length % 5) * 20);
+    if (referrals) {
+      // Update referral level and progress only when referrals is defined
+      const newLevel = Math.floor(referrals.length / 5) + 1;
+      setReferralLevel(newLevel);
+      setProgress((referrals.length % 5) * 20);
+    }
   }, [referrals]);
 
   if (loading) {
@@ -136,9 +134,9 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-lg mb-4">Refer {5 - (referrals&&referrals.length % 5)} more friends to level up!</p>
+          <p className="text-lg mb-4">Refer {5 - (referrals.length % 5)} more friends to level up!</p>
         </div>
-        {referrals && referrals.length === 0 ? (
+        {referrals.length === 0 ? (
           <div className="text-center">
             <Image
               src="/images/no-friends.png"
@@ -153,13 +151,12 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
           </div>
         ) : (
           <ul className="space-y-6">
-            {referrals.map((referral) => (
+            {referrals.map((referral, index) => (
               <li
-                key={referral}
+                key={index}
                 className="bg-white text-gray-800 rounded-lg p-6 shadow-lg transform hover:scale-105 transition-transform duration-300"
               >
                 <p className="text-lg font-bold">Friend ID: {referral}</p>
-                <p className="text-md">Referred By: {referrer || "Unknown"}</p>
               </li>
             ))}
           </ul>
