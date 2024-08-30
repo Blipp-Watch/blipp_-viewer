@@ -66,95 +66,38 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
     alert('Invite link copied to clipboard!')
   }
 
-  useEffect(() => {
-    if (referrals) {
-      // Update referral level and progress only when referrals is defined
-      const newLevel = Math.floor(referrals.length / 5) + 1;
-      setReferralLevel(newLevel);
-      setProgress((referrals.length % 5) * 20);
-    }
-  }, [referrals]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-8 text-white">
-      <div className="flex flex-col items-center justify-center text-center mb-10">
-        <h1 className="text-5xl font-extrabold mb-4">
-          Invite Your Friends, Earn Rewards!
-        </h1>
-        <p className="text-lg font-medium mb-4 max-w-lg">
-          Share your referral code and earn amazing rewards when your friends join! Level up as you refer more friends and unlock exclusive bonuses!
-        </p>
-      </div>
-
-      <div className="bg-white text-gray-800 rounded-lg shadow-xl p-8 max-w-xl w-full text-center transform hover:scale-105 transition-transform duration-300">
-        <h2 className="text-3xl font-bold mb-6">Your Referral Code</h2>
-        <div className="bg-gray-100 text-indigo-600 rounded-lg p-4 mb-6">
-          <p className="text-xl font-semibold">{userId.substring(0, 6)}</p>
-        </div>
-        <p className="text-lg mb-8">
-          Share this link to refer friends:
-          <strong className="block mt-2 text-indigo-700 text-xl break-words">
-            {`${INVITE_URL}?start=${userId}`}
-          </strong>
-        </p>
+    <div className="w-full max-w-md">
+      {referrer && (
+        <p className="text-green-500 mb-4">You were referred by user {referrer}</p>
+      )}
+      <div className="flex flex-col space-y-4">
         <button
           onClick={handleInviteFriend}
-          className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg hover:shadow-2xl animate-pulse"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Share Referral
+          Invite Friend
         </button>
         <button
           onClick={handleCopyLink}
-          className="mt-4 bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-300 shadow-lg hover:bg-gray-400"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
-          Copy Link
+          Copy Invite Link
         </button>
       </div>
-
-      <div className="w-full max-w-xl mt-12">
-        <h2 className="text-4xl font-extrabold mb-6 text-center">
-          Your Referrals
-        </h2>
-        <div className="bg-white text-gray-800 rounded-lg shadow-xl p-6 mb-6">
-          <h3 className="text-2xl font-bold mb-2">Referral Level: {referralLevel}</h3>
-          <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-            <div
-              className="bg-green-500 h-4 rounded-full"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          <p className="text-lg mb-4">Refer {5 - (referrals.length % 5)} more friends to level up!</p>
-        </div>
-        {referrals.length === 0 ? (
-          <div className="text-center">
-            <Image
-              src="/images/no-friends.png"
-              alt="No friends"
-              width={250}
-              height={250}
-              className="mx-auto"
-            />
-            <p className="mt-6 text-lg font-medium text-white">
-              You haven&apos;t referred anyone yet. Start sharing your code!
-            </p>
-          </div>
-        ) : (
-          <ul className="space-y-6">
+      {referrals.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Your Referrals</h2>
+          <ul>
             {referrals.map((referral, index) => (
-              <li
-                key={index}
-                className="bg-white text-gray-800 rounded-lg p-6 shadow-lg transform hover:scale-105 transition-transform duration-300"
-              >
-                <p className="text-lg font-bold">Friend ID: {referral}</p>
+              <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
+                User {referral}
               </li>
             ))}
           </ul>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
