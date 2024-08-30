@@ -3,13 +3,13 @@ import { initUtils } from "@telegram-apps/sdk";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-interface ReferralSystemProps {
+export interface ReferralSystemProps {
   initData: string;
   userId: string;
   startParam: string;
 }
 
-const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
+const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
   const INVITE_URL = "https://t.me/blipp_official_bot/start";
@@ -169,4 +169,4 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
   );
 };
 
-export default ReferralSystem;
+export default Referral;
