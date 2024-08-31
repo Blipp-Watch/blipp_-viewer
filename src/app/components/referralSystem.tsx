@@ -35,7 +35,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
     const checkReferral = async () => {
       if (startParam && userId) {
         try {
-          const response = await fetch(`/api/referrals`, {
+          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals`, {
             method: "POST",
             body: JSON.stringify({ userId, referrerId: startParam }),
             headers: {
@@ -54,7 +54,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
     const fetchReferrals = async () => {
       if (userId) {
         try {
-          const response = await fetch(`/api/referrals?userId=${userId}`);
+          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals?userId=${userId}`);
           if (!response.ok) {
             throw new Error("Failed to fetch referrals");
           }
