@@ -137,7 +137,7 @@ const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam 
         {referrals.length === 0 ? (
           <div className="text-center">
             <Image
-              src="/images/no-friends.png"
+              src="/icon.png"
               alt="No friends"
               width={250}
               height={250}
