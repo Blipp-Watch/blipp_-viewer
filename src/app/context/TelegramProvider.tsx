@@ -2,8 +2,6 @@ import { initUtils } from '@telegram-apps/sdk';
 import React, { useState, useEffect, createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-const ytBaseURL = process.env.NEXT_PUBLIC_YT_BASE_URL;
-const youtubeKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 interface ProviderProps{
     initData:string;
     setInitData:React.Dispatch<React.SetStateAction<string>>;
@@ -107,46 +105,6 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
             getReferralCode();
         }, []);
 
-
-        useEffect(() => {
-            const checkReferral = async () => {
-              if (startParam && userId) {
-                try {
-                  const response = await fetch(`https://blipp-watch.vercel.app/api/referrals`, {
-                    method: "POST",
-                    body: JSON.stringify({ userId, referrerId: startParam }),
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  });
-                  if (!response.ok) {
-                    throw new Error("Failed to refer a friend");
-                  }
-                } catch (error) {
-                  console.error(error);
-                }
-              }
-            };
-        
-            const fetchReferrals = async () => {
-              if (userId) {
-                try {
-                  const response = await fetch(`https://blipp-watch.vercel.app/api/referrals?userId=${userId}`);
-                  if (!response.ok) {
-                    throw new Error("Failed to fetch referrals");
-                  }
-                  const data = await response.json();
-                  setReferrals(data.referrals || []); // Ensure referrals is an array
-                  setReferrer(data.referrer || null);
-                } catch (error) {
-                  console.error("Error fetching referrals: ", error);
-                }
-              }
-            };
-            
-            checkReferral();
-            fetchReferrals();
-          }, [userId, startParam]);
 
     return (
         <TelegramContext.Provider value={{ initData, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode }}>

@@ -11,10 +11,9 @@ let storage: ReferralData = {
 export function saveReferral(userId: string, referrerId: string) {
     if (!storage.referrals[referrerId]) {
         storage.referrals[referrerId]=[];
-    } else {
-        storage.referrals[referrerId].push(userId);
-        storage.referredBy[userId] = referrerId;
     }
+    storage.referrals[referrerId].push(userId);
+    storage.referredBy[userId] = referrerId;
 }
 
 export function getReferrals(userId: string): string[] {

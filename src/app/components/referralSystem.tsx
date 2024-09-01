@@ -12,7 +12,49 @@ export interface ReferralSystemProps {
 const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId}) => {
   const INVITE_URL = "https://t.me/blipp_official_bot/";
 
-  const { referrals, loading, referralLevel, setReferralLevel, referralCode, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
+  const { referrals, setReferrals, setReferrer,loading, referralLevel, setReferralLevel, referralCode, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
+
+  useEffect(() => {
+    const checkReferral = async () => {
+      if (startParam && userId) {
+        try {
+          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals`, {
+            method: "POST",
+            body: JSON.stringify({ userId, referrerId: startParam }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to refer a friend");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    const fetchReferrals = async () => {
+      if (userId) {
+        try {
+          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals?userId=${userId}`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch referrals");
+          }
+          const data = await response.json();
+          setReferrals(data.referrals || []); // Ensure referrals is an array
+          setReferrer(data.referrer || null);
+          console.log("Referrals: ", data.referrals);
+          console.log("Referrer: ", data.referrer);
+        } catch (error) {
+          console.error("Error fetching referrals: ", error);
+        }
+      }
+    };
+    
+    checkReferral();
+    fetchReferrals();
+  }, [userId, startParam]);
 
   useEffect(() => {
     if (referrals) {
