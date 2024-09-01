@@ -1,7 +1,7 @@
 'use client';
-import { initUtils } from "@telegram-apps/sdk";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Image from "next/image";
+import { TelegramContext } from "../context/TelegramProvider";
 
 export interface ReferralSystemProps {
   initData: string;
@@ -9,67 +9,10 @@ export interface ReferralSystemProps {
   startParam: string;
 }
 
-const Referral: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
-  const [referrals, setReferrals] = useState<string[]>([]);
-  const [referrer, setReferrer] = useState<string | null>(null);
+const Referral: React.FC<ReferralSystemProps> = () => {
   const INVITE_URL = "https://t.me/blipp_official_bot/";
-  const [loading, setLoading] = useState<boolean>(false);
-  const [referralLevel, setReferralLevel] = useState(1);
-  const [progress, setProgress] = useState(0);
 
-  const handleReferral = async () => {
-    const utils = initUtils();
-    const inviteLink = `${INVITE_URL}?start=${userId}`;
-    const shareText = `Join Blipp, watch videos and get rewarded!`;
-    const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`;
-    utils.openTelegramLink(fullUrl);
-  };
-
-  const handleCopyLink = () => {
-    const inviteLink = `${INVITE_URL}?startapp=${userId}`;
-    navigator.clipboard.writeText(inviteLink);
-    alert("Link copied to clipboard!");
-  };
-
-  useEffect(() => {
-    const checkReferral = async () => {
-      if (startParam && userId) {
-        try {
-          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals`, {
-            method: "POST",
-            body: JSON.stringify({ userId, referrerId: startParam }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Failed to refer a friend");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
-    const fetchReferrals = async () => {
-      if (userId) {
-        try {
-          const response = await fetch(`https://blipp-watch.vercel.app/api/referrals?userId=${userId}`);
-          if (!response.ok) {
-            throw new Error("Failed to fetch referrals");
-          }
-          const data = await response.json();
-          setReferrals(data.referrals || []); // Ensure referrals is an array
-          setReferrer(data.referrer || null);
-        } catch (error) {
-          console.error("Error fetching referrals: ", error);
-        }
-      }
-    };
-    
-    checkReferral();
-    fetchReferrals();
-  }, [userId, startParam]);
+  const { userId, referrals, loading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
 
   useEffect(() => {
     if (referrals) {
