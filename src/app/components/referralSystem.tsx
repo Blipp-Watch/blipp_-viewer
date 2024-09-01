@@ -41,22 +41,22 @@ const Referral: React.FC<ReferralSystemProps> = () => {
       <div className="bg-white text-gray-800 rounded-lg shadow-xl p-8 max-w-xl w-full text-center transform hover:scale-105 transition-transform duration-300">
         <h2 className="text-3xl font-bold mb-6">Your Referral Code</h2>
         <div className="bg-gray-100 text-indigo-600 rounded-lg p-4 mb-6">
-          <p className="text-xl font-semibold">{userId.substring(0, 6)}</p>
+          <p className="text-xl font-semibold">{userId.toString().substring(0, 6)}</p>
         </div>
         <p className="text-lg mb-8">
           Share this link to refer friends:
           <strong className="block mt-2 text-indigo-700 text-xl break-words">
-            {`${INVITE_URL}?start=${userId}`}
+            {`${INVITE_URL}?start=${userId.toString()}`}
           </strong>
         </p>
         <button
-          onClick={handleReferral}
+          onClick={()=>handleReferral()}
           className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg hover:shadow-2xl animate-pulse"
         >
           Share Referral
         </button>
         <button
-          onClick={handleCopyLink}
+          onClick={()=>handleCopyLink()}
           className="mt-4 bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-300 shadow-lg hover:bg-gray-400"
         >
           Copy Link
