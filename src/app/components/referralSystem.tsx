@@ -9,10 +9,10 @@ export interface ReferralSystemProps {
   startParam: string;
 }
 
-const Referral: React.FC<ReferralSystemProps> = () => {
+const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId}) => {
   const INVITE_URL = "https://t.me/blipp_official_bot/";
 
-  const { userId, referrals, loading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
+  const { referrals, loading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
 
   useEffect(() => {
     if (referrals) {
