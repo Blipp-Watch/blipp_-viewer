@@ -1,5 +1,6 @@
 import { initUtils } from '@telegram-apps/sdk';
 import React, { useState, useEffect, createContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const ytBaseURL = process.env.NEXT_PUBLIC_YT_BASE_URL;
 const youtubeKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
@@ -22,6 +23,7 @@ interface ProviderProps{
     setProgress:React.Dispatch<React.SetStateAction<number>>;
     handleReferral:()=>void;
     handleCopyLink:()=>void;
+    referralCode?:string;
 }
 
 export const TelegramContext = createContext<ProviderProps>({
@@ -42,7 +44,8 @@ export const TelegramContext = createContext<ProviderProps>({
     progress:0,
     setProgress:()=>{},
     handleReferral:()=>{},
-    handleCopyLink:()=>{}
+    handleCopyLink:()=>{},
+    referralCode:"" 
 })
 
 export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -55,17 +58,30 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
     const [loading, setLoading] = useState<boolean>(false);
     const [referralLevel, setReferralLevel] = useState(1);
     const [progress, setProgress] = useState(0);
+    const [referralCode, setReferralCode] = useState<string>();
+
+
+    const getReferralCode = () => {
+        const referralCode = localStorage.getItem("referralCode");
+        if (referralCode) {
+            setReferralCode(referralCode);
+        } else {
+            const newReferralCode = uuidv4().toString().substring(0, 8);
+            localStorage.setItem("referralCode", newReferralCode);
+            setReferralCode(newReferralCode);
+        }
+    }
   
     const handleReferral = async () => {
       const utils = initUtils();
-      const inviteLink = `${INVITE_URL}?start=${userId}`;
+      const inviteLink = `${INVITE_URL}?startapp=${referralCode}`;
       const shareText = `Join Blipp, watch videos and get rewarded!`;
       const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`;
       utils.openTelegramLink(fullUrl);
     };
   
     const handleCopyLink = () => {
-      const inviteLink = `${INVITE_URL}?startapp=${userId}`;
+      const inviteLink = `${INVITE_URL}?startapp=${referralCode}`;
       navigator.clipboard.writeText(inviteLink);
       alert("Link copied to clipboard!");
     };
@@ -74,6 +90,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
         const initWebApp = async () => {
             if (typeof window !== 'undefined') {
               const WebApp = (await import('@twa-dev/sdk')).default;
+              console.log("WebApp: ", WebApp.initDataUnsafe);
               WebApp.ready();
               setInitData(WebApp.initData);
               setUserId(WebApp.initDataUnsafe.user?.id.toString() || '');
@@ -84,6 +101,11 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
       
           initWebApp();
         }, [userId, startParam, initData]);
+
+
+        useEffect(() => {
+            getReferralCode();
+        }, []);
 
 
         useEffect(() => {
@@ -127,7 +149,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
           }, [userId, startParam]);
 
     return (
-        <TelegramContext.Provider value={{ initData, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink }}>
+        <TelegramContext.Provider value={{ initData, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode }}>
             {children}
         </TelegramContext.Provider>
     );

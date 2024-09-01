@@ -2,7 +2,6 @@
 import { useContext, useEffect } from "react";
 import Image from "next/image";
 import { TelegramContext } from "../context/TelegramProvider";
-import { v4 as uuidv4 } from 'uuid';
 
 export interface ReferralSystemProps {
   initData: string;
@@ -12,13 +11,11 @@ export interface ReferralSystemProps {
 
 const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId}) => {
   const INVITE_URL = "https://t.me/blipp_official_bot/";
-  const referralCode = uuidv4().toString().substring(0, 6);
 
-  const { referrals, loading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
+  const { referrals, loading, referralLevel, setReferralLevel, referralCode, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
 
   useEffect(() => {
     if (referrals) {
-      // Update referral level and progress only when referrals is defined
       const newLevel = Math.floor(referrals.length / 5) + 1;
       setReferralLevel(newLevel);
       setProgress((referrals.length % 5) * 20);
@@ -48,7 +45,7 @@ const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId})
         <p className="text-lg mb-8">
           Share this link to refer friends:
           <strong className="block mt-2 text-indigo-700 text-xl break-words">
-            {`${INVITE_URL}?start=${referralCode}`}
+            {`${INVITE_URL}?startapp=${referralCode}`}
           </strong>
         </p>
         <button
