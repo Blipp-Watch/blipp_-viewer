@@ -2,6 +2,7 @@
 import { useContext, useEffect } from "react";
 import Image from "next/image";
 import { TelegramContext } from "../context/TelegramProvider";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ReferralSystemProps {
   initData: string;
@@ -11,6 +12,7 @@ export interface ReferralSystemProps {
 
 const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId}) => {
   const INVITE_URL = "https://t.me/blipp_official_bot/";
+  const referralCode = uuidv4().toString().substring(0, 6);
 
   const { referrals, loading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink} = useContext(TelegramContext)
 
@@ -41,12 +43,12 @@ const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId})
       <div className="bg-white text-gray-800 rounded-lg shadow-xl p-8 max-w-xl w-full text-center transform hover:scale-105 transition-transform duration-300">
         <h2 className="text-3xl font-bold mb-6">Your Referral Code</h2>
         <div className="bg-gray-100 text-indigo-600 rounded-lg p-4 mb-6">
-          <p className="text-xl font-semibold">{userId.toString().substring(0, 6)}</p>
+          <p className="text-xl font-semibold">{referralCode}</p>
         </div>
         <p className="text-lg mb-8">
           Share this link to refer friends:
           <strong className="block mt-2 text-indigo-700 text-xl break-words">
-            {`${INVITE_URL}?start=${userId.toString()}`}
+            {`${INVITE_URL}?start=${referralCode}`}
           </strong>
         </p>
         <button
