@@ -5,51 +5,104 @@ import { v4 as uuidv4 } from 'uuid';
 import WebApp from "@twa-dev/sdk";
 
 
-interface ProviderProps{
-    initData:string;
-    setInitData:React.Dispatch<React.SetStateAction<string>>;
-    userId:string;
-    setUserId:React.Dispatch<React.SetStateAction<string>>;
-    startParam:string;
-    setStartParam:React.Dispatch<React.SetStateAction<string>>;
-    referrals:string[];
-    setReferrals:React.Dispatch<React.SetStateAction<string[]>>;
-    referrer:string | null;
-    setReferrer:React.Dispatch<React.SetStateAction<string | null>>;
-    loading:boolean;
-    setLoading:React.Dispatch<React.SetStateAction<boolean>>;
-    referralLevel:number;
-    setReferralLevel:React.Dispatch<React.SetStateAction<number>>;
-    progress:number;
-    setProgress:React.Dispatch<React.SetStateAction<number>>;
-    handleReferral:()=>void;
-    handleCopyLink:()=>void;
-    referralCode?:string;
-    user:any;
+
+interface User {
+    user_id: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+    language_code: string;
+    name: string;
+    level: number;
+    xp: number;
+    xpToNextLevel: number;
+    badges: [
+        {
+            title: string;
+            icon: string;
+        }
+    ];
+    avatar: string;
+    blippTokens: number;
+    achievements: [];
+    dailyBonus: {
+        streak: number;
+        nextReward: string;
+        available: boolean;
+    };
+}
+
+interface ProviderProps {
+    initData: string;
+    setInitData: React.Dispatch<React.SetStateAction<string>>;
+    userId: string;
+    setUserId: React.Dispatch<React.SetStateAction<string>>;
+    startParam: string;
+    setStartParam: React.Dispatch<React.SetStateAction<string>>;
+    referrals: string[];
+    setReferrals: React.Dispatch<React.SetStateAction<string[]>>;
+    referrer: string | null;
+    setReferrer: React.Dispatch<React.SetStateAction<string | null>>;
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    referralLevel: number;
+    setReferralLevel: React.Dispatch<React.SetStateAction<number>>;
+    progress: number;
+    setProgress: React.Dispatch<React.SetStateAction<number>>;
+    handleReferral: () => void;
+    handleCopyLink: () => void;
+    referralCode?: string;
+    user: User;
+    setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
 export const TelegramContext = createContext<ProviderProps>({
-    initData:"",
-    setInitData:()=>{},
-    userId:"",
-    setUserId:()=>{},
-    startParam:"",
-    setStartParam:()=>{},
-    referrals:[],
-    setReferrals:()=>{},
-    referrer:null,
-    setReferrer:()=>{},
-    loading:false,
-    setLoading:()=>{},
-    referralLevel:1,
-    setReferralLevel:()=>{},
-    progress:0,
-    setProgress:()=>{},
-    handleReferral:()=>{},
-    handleCopyLink:()=>{},
-    referralCode:"",
-    user:{}
-})
+    initData: "",
+    setInitData: () => {},
+    userId: "",
+    setUserId: () => {},
+    startParam: "",
+    setStartParam: () => {},
+    referrals: [],
+    setReferrals: () => {},
+    referrer: null,
+    setReferrer: () => {},
+    loading: false,
+    setLoading: () => {},
+    referralLevel: 0,
+    setReferralLevel: () => {},
+    progress: 0,
+    setProgress: () => {},
+    handleReferral: () => {},
+    handleCopyLink: () => {},
+    referralCode: "",
+    user: {
+        user_id: "",
+        first_name: "",
+        last_name: "",
+        username: "",
+        language_code: "",
+        name: "",
+        level: 1,
+        xp: 0,
+        xpToNextLevel: 1000,
+        badges: [
+            {
+                title: "",
+                icon: ""
+            }
+        ],
+        avatar: "default-avatar-url",
+        blippTokens: 0,
+        achievements: [],
+        dailyBonus: {
+            streak: 0,
+            nextReward: "Reward",
+            available: false
+        }
+    },
+    setUser: () => {}
+});
 
 export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [initData, setInitData] = useState("");
@@ -63,7 +116,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
     const [progress, setProgress] = useState(0);
     const [referralCode, setReferralCode] = useState<string>();
     const [isDataSaved, setIsDataSaved] = useState<boolean>(false); 
-    let user:any;
+    const [user, setUser] = useState<any>({});
 
 
     const saveUserToDb = async (data: any) => {
@@ -72,7 +125,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
             const existingUser = await checkResponse.json();
 
             if (existingUser) {
-                console.log('User already exists:', existingUser);
+                setUser(existingUser);
                 return;
             }
 
@@ -122,12 +175,12 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
               console.log("WebApp: ", WebApp.initDataUnsafe);
               WebApp.ready();
               setInitData(WebApp.initData);
-              user = WebApp.initDataUnsafe.user;
+              let userUnsafeData = WebApp.initDataUnsafe.user;
               setUserId(user?.id.toString() || '');
               setStartParam(WebApp.initDataUnsafe.start_param || '');
               console.log(WebApp.initDataUnsafe);
 
-            if (user && !isDataSaved) {
+            if (userUnsafeData && !isDataSaved) {
                 const userData = {
                     user_id: user.id,
                     first_name: user.first_name,
@@ -145,6 +198,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
                     dailyBonus: { streak: 0, nextReward: '', available: false },
                 };
                 await saveUserToDb(userData);
+                setUser(userData);
                 setIsDataSaved(true);
             }
             }
@@ -160,7 +214,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
 
 
     return (
-        <TelegramContext.Provider value={{ initData, user, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode }}>
+        <TelegramContext.Provider value={{ initData, user, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode, setUser }}>
             {children}
         </TelegramContext.Provider>
     );
