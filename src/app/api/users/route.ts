@@ -8,7 +8,7 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true } as mongoose.ConnectOptions);
 }
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await connectDB();
     
     if (req.method === 'GET') {
@@ -27,7 +27,9 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
             await newUser.save();
             res.status(201).json(newUser);
         } catch (error) {
-            res.status(500).json({ error: 'Failed to save user' });
+            res.status(500).json({ error: 'Failed to create user' });
         }
     }
 }
+
+export default handler;
