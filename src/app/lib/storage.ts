@@ -1,25 +1,27 @@
-interface ReferralData {
-    referrals: {[userId: string]: string[]};
-    referredBy: {[userId: string]: string};
+import mongoose from 'mongoose';
+import Referral from '../../models/Referrals';
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/referrals', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+} as mongoose.ConnectOptions).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB', err);
+});
+
+export async function saveReferral(userId: string, referrerId: string) {
+    const referral = new Referral({ userId, referrerId });
+    await referral.save();
 }
 
-let storage: ReferralData = {
-    referrals: {},
-    referredBy: {}
+export async function getReferrals(referrerId: string): Promise<string[]> {
+    const referrals = await Referral.find({ referrerId }).exec();
+    return referrals.map(referral => referral.userId);
 }
 
-export function saveReferral(userId: string, referrerId: string) {
-    if (!storage.referrals[referrerId]) {
-        storage.referrals[referrerId]=[];
-    }
-    storage.referrals[referrerId].push(userId);
-    storage.referredBy[userId] = referrerId;
-}
-
-export function getReferrals(userId: string): string[] {
-    return storage.referrals[userId] || [];
-}
-
-export function getReferrer(userId: string): string | null {
-    return storage.referredBy[userId] || null;
+export async function getReferrer(userId: string): Promise<string | null> {
+    const referral = await Referral.findOne({ userId }).exec();
+    return referral ? referral.referrerId : null;
 }
