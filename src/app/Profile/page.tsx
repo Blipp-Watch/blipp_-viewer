@@ -106,15 +106,15 @@ export default function Profile() {
                     <Gift className="w-6 h-6 mr-2 text-yellow-400" />
                     Daily Bonus
                 </h2>
-                <p className="text-lg mb-2">Streak: {user?.dailyBonus.streak || 0} Days 🔥</p>
-                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus.nextReward }</p>
+                <p className="text-lg mb-2">Streak: {user?.dailyBonus?.streak! || 0} Days 🔥</p>
+                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus?.nextReward }</p>
                 <motion.button
-                    className={`py-2 px-6 rounded-full font-bold ${user?.dailyBonus.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
-                    disabled={!user?.dailyBonus.available}
-                    whileHover={user?.dailyBonus.available ? { scale: 1.05 } : {}}
-                    whileTap={user?.dailyBonus.available ? { scale: 0.95 } : {}}
+                    className={`py-2 px-6 rounded-full font-bold ${user?.dailyBonus?.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
+                    disabled={!user?.dailyBonus?.available}
+                    whileHover={user?.dailyBonus?.available ? { scale: 1.05 } : {}}
+                    whileTap={user?.dailyBonus?.available ? { scale: 0.95 } : {}}
                 >
-                    {user?.dailyBonus.available ? '🎁 Claim Daily Bonus' : '⏳ Come Back Tomorrow'}
+                    {user?.dailyBonus?.available ? '🎁 Claim Daily Bonus' : '⏳ Come Back Tomorrow'}
                 </motion.button>
             </motion.div>
 
@@ -130,7 +130,7 @@ export default function Profile() {
                     Achievements
                 </h2>
                 <div className="flex flex-col space-y-4">
-                    {user?.achievements.map((achievement:any, index:number) => (
+                    {user?.achievements?.map((achievement:any, index:number) => (
                         <motion.div 
                             key={index} 
                             className="flex items-center bg-gray-700 p-4 rounded-lg"
