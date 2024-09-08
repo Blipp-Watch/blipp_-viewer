@@ -244,7 +244,7 @@ export default function Profile() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <h2 className="text-3xl font-bold mb-4">Rewards Claimed!</h2>
-                            <p className="text-xl mb-4">You've earned:</p>
+                            <p className="text-xl mb-4">You&apos;ve earned:</p>
                             <ul className="text-2xl font-bold space-y-2 mb-6">
                                 <li>🪙 100 Blipp Tokens</li>
                                 <li>⭐ 500 XP</li>

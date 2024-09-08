@@ -317,7 +317,7 @@ const Referral: React.FC<ReferralSystemProps> = ({initData, startParam, userId})
           >
             <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-lg text-white text-center">
               <h2 className="text-3xl font-bold mb-4">Level Up!</h2>
-              <p className="text-xl">Congratulations! You've reached level {referralLevel}!</p>
+              <p className="text-xl">Congratulations! You&apos;ve reached level {referralLevel}!</p>
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}

@@ -193,7 +193,7 @@ export default function Quests() {
                     >
                         <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-lg text-white text-center">
                             <h2 className="text-3xl font-bold mb-4">Quest Master!</h2>
-                            <p className="text-xl mb-4">You've completed all quests! Here's a special reward:</p>
+                            <p className="text-xl mb-4">You&apos;ve completed all quests! Here&apos;s a special reward:</p>
                             <div className="text-4xl mb-4">🏆</div>
                             <p className="text-2xl font-bold">500 Bonus Points!</p>
                             <button
