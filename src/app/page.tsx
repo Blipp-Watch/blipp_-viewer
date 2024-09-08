@@ -3,9 +3,6 @@ import MainView from "./components/MainView";
 import LoginView from "./components/LoginView";
 import { VideoContextProvider } from "./context/videoContext";
 import { TelegramContextProvider } from "./context/TelegramProvider";
-import WebApp from "@twa-dev/sdk";
-
-WebApp.ready();
 
 export default function Home() {
   let connected = true;
