@@ -30,16 +30,16 @@ const AchievementSchema = new mongoose.Schema({
 
 const DailyBonusSchema = new mongoose.Schema({
   streak: { type: Number, default: 0 },
-  nextReward: { type: String, required: true },
+  nextReward: { type: String },
   available: { type: Boolean, default: false },
 });
 
 const UserSchema = new mongoose.Schema({
   user_id: { type: Number, required: true, unique: true },
-  first_name: { type: String, required: true },
+  first_name: { type: String },
   last_name: { type: String, default: '' },
-  username: { type: String, required: true },
-  language_code: { type: String, required: true },
+  username: { type: String },
+  language_code: { type: String},
   name: { type: String, required: true },
   level: { type: Number, default: 1 },
   xp: { type: Number, default: 0 },

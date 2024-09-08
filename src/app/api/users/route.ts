@@ -10,18 +10,18 @@ const connectDB = async () => {
 
 export async function POST(request: NextRequest) {
     await connectDB();
-    const { name, level, xp, badges, blippTokens, achievements, dailyBonus, user_id } = await request.json();
+    const { user_id, first_name, last_name, username, language_code, name, level, xp, badges, blippTokens, achievements, dailyBonus } = await request.json();
 
-    if (!name || !user_id) {
+    if (!user_id || !first_name || !username || !language_code || !name) {
         return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     try {
-        const newUser = new User({ name, level, xp, badges, blippTokens, achievements, dailyBonus });
+        const newUser = new User({ user_id, first_name, last_name, username, language_code, name, level, xp, badges, blippTokens, achievements, dailyBonus });
         await newUser.save();
         return NextResponse.json(newUser, { status: 201 });
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
+        return NextResponse.json({ error: `Failed to create user: ${error}` }, { status: 500 });
     }
 }
 
