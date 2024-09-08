@@ -10,9 +10,9 @@ const connectDB = async () => {
 
 export async function POST(request: NextRequest) {
     await connectDB();
-    const { name, level, xp, badges, blippTokens, achievements, dailyBonus } = await request.json();
+    const { name, level, xp, badges, blippTokens, achievements, dailyBonus, user_id } = await request.json();
 
-    if (!name || !level || !xp || !badges || !blippTokens || !achievements || !dailyBonus) {
+    if (!name || user_id) {
         return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -27,14 +27,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
     await connectDB();
-    const name = request.nextUrl.searchParams.get('name');
+    const user_id = request.nextUrl.searchParams.get('user_id');
 
-    if (!name) {
+    if (!user_id) {
         return NextResponse.json({ error: 'Missing name' }, { status: 400 });
     }
 
     try {
-        const user = await User.findOne({ name });
+        const user = await User.findOne({ user_id });
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 });

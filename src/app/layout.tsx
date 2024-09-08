@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BottomTabNavigator from "./components/BottomTabNav";
+import { TelegramContextProvider } from "./context/TelegramProvider";
+import { VideoContextProvider } from "./context/videoContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
-        <div>
-          <BottomTabNavigator />
-        </div>
+      <TelegramContextProvider>
+      <VideoContextProvider>
+          {children}
+          <div>
+            <BottomTabNavigator />
+          </div>
+        </VideoContextProvider>
+        </TelegramContextProvider>
       </body>
     </html>
   );

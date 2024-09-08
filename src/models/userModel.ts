@@ -20,6 +20,11 @@ const DailyBonusSchema = new mongoose.Schema({
 });
 
 const UserSchema = new mongoose.Schema({
+  user_id: { type: Number, required: true, unique: true },
+  first_name: { type: String, required: true },
+  last_name: { type: String, default: '' },
+  username: { type: String, required: true },
+  language_code: { type: String, required: true },
   name: { type: String, required: true },
   level: { type: Number, default: 1 },
   xp: { type: Number, default: 0 },

@@ -1,3 +1,4 @@
+'use client'
 import { initUtils } from '@telegram-apps/sdk';
 import React, { useState, useEffect, createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,6 +25,7 @@ interface ProviderProps{
     handleReferral:()=>void;
     handleCopyLink:()=>void;
     referralCode?:string;
+    user:any;
 }
 
 export const TelegramContext = createContext<ProviderProps>({
@@ -45,7 +47,8 @@ export const TelegramContext = createContext<ProviderProps>({
     setProgress:()=>{},
     handleReferral:()=>{},
     handleCopyLink:()=>{},
-    referralCode:"" 
+    referralCode:"",
+    user:{}
 })
 
 export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -59,6 +62,33 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
     const [referralLevel, setReferralLevel] = useState(1);
     const [progress, setProgress] = useState(0);
     const [referralCode, setReferralCode] = useState<string>();
+    const [isDataSaved, setIsDataSaved] = useState<boolean>(false); 
+    let user:any;
+
+
+    const saveUserToDb = async (data: any) => {
+        try {
+            const checkResponse = await fetch(`/api/users?user_id=${data.user_id}`);
+            const existingUser = await checkResponse.json();
+
+            if (existingUser) {
+                console.log('User already exists:', existingUser);
+                return;
+            }
+
+            // If user does not exist, add the user
+            const response = await fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+            console.log('User saved:', await response.json());
+        } catch (error) {
+            console.error('Failed to save user to DB:', error);
+        }
+    };
 
 
     const getReferralCode = () => {
@@ -92,14 +122,36 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
               console.log("WebApp: ", WebApp.initDataUnsafe);
               WebApp.ready();
               setInitData(WebApp.initData);
-              setUserId(WebApp.initDataUnsafe.user?.id.toString() || '');
+              user = WebApp.initDataUnsafe.user;
+              setUserId(user?.id.toString() || '');
               setStartParam(WebApp.initDataUnsafe.start_param || '');
               console.log(WebApp.initDataUnsafe);
+
+            if (user && !isDataSaved) {
+                const userData = {
+                    user_id: user.id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    username: user.username,
+                    language_code: user.language_code,
+                    name: user.username,
+                    level: 1,
+                    xp: 0,
+                    xpToNextLevel: 1000,
+                    badges: [],
+                    avatar: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Buddy',
+                    blippTokens: 0,
+                    achievements: [],
+                    dailyBonus: { streak: 0, nextReward: '', available: false },
+                };
+                await saveUserToDb(userData);
+                setIsDataSaved(true);
+            }
             }
           };
       
           initWebApp();
-        }, [userId, startParam, initData]);
+        }, [userId, startParam, initData, isDataSaved]);
 
 
         useEffect(() => {
@@ -108,7 +160,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
 
 
     return (
-        <TelegramContext.Provider value={{ initData, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode }}>
+        <TelegramContext.Provider value={{ initData, user, setInitData, userId, setUserId, startParam, setStartParam, referrals, setReferrals, referrer, setReferrer, loading, setLoading, referralLevel, setReferralLevel, progress, setProgress, handleReferral, handleCopyLink, referralCode }}>
             {children}
         </TelegramContext.Provider>
     );

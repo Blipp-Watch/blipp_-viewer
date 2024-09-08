@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['i.ytimg.com', 'api.dicebear.com'], // Add 'i.ytimg.com' to the list of allowed domains
+        domains: ['i.ytimg.com', 'api.dicebear.com'],
+        dangerouslyAllowSVG: true,
+        contentDispositionType: 'attachment',
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     }, 
 };
 

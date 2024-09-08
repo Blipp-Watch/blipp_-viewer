@@ -1,48 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Image from "next/image"
 import { motion, AnimatePresence } from 'framer-motion'
 import { Shield, Zap, Gift, Trophy, Award, Star, ChevronRight, ChevronLeft } from 'lucide-react'
 import confetti from 'canvas-confetti'
+import { TelegramContext } from '../context/TelegramProvider'
 
 export default function Profile() {
     const [showReward, setShowReward] = useState(false)
     const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0)
+    const {user} = useContext(TelegramContext)
 
-    const user = {
-        name: "BlippMaster99",
-        level: 12,
-        xp: 3200,
-        xpToNextLevel: 4000,
-        badges: [
-            { title: "First Referral", icon: "🏅" },
-            { title: "Quest Streak: 5 Days", icon: "🔥" },
-            { title: "Social Media Star", icon: "📣" },
-            { title: "Video Enthusiast", icon: "🎥" },
-            { title: "Token Collector", icon: "🪙" },
-        ],
-        avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Buddy",
-        blippTokens: 1500,
-        achievements: [
-            { title: "Watched 50 Videos", icon: "🎥", progress: 50, goal: 50, completed: true },
-            { title: "Referred 10 Friends", icon: "👥", progress: 8, goal: 10, completed: false },
-            { title: "Social Media Shares", icon: "📣", progress: 15, goal: 20, completed: false },
-        ],
-        dailyBonus: {
-            streak: 3,
-            nextReward: "500 Blipp Tokens",
-            available: true,
-        }
-    }
+    const xp = user?.xp || 0;
+    const xpToNextLevel = user?.xpToNextLevel || 1000;
+    const progress = (xp / xpToNextLevel) * 100;
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user.badges.length)
+            setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user?.badges.length)
         }, 3000)
 
         return () => clearInterval(interval)
-    }, [user.badges.length])
+    }, [user?.badges?.length])
 
     const handleClaimRewards = () => {
         setShowReward(true)
@@ -64,7 +44,7 @@ export default function Profile() {
             >
                 <div className="relative">
                     <Image
-                        src={user.avatar}
+                        src={user?.avatar}
                         alt="User Avatar"
                         className="w-24 h-24 rounded-full border-4 border-indigo-600 mb-4"
                         width={96}
@@ -78,20 +58,20 @@ export default function Profile() {
                         <Shield className="w-4 h-4 text-gray-900" />
                     </motion.div>
                 </div>
-                <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+                <h1 className="text-3xl font-bold mb-2">{user?.name}</h1>
                 <p className="text-lg font-medium mb-2 flex items-center">
                     <Shield className="w-5 h-5 mr-1 text-yellow-400" />
-                    Level {user.level}
+                    Level {user?.level || 1}
                 </p>
                 <div className="w-full bg-gray-700 rounded-full h-4 mb-2 relative">
                     <motion.div
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 h-4 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(user.xp / user.xpToNextLevel) * 100}%` }}
-                        transition={{ duration: 1, delay: 0.5 }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 h-4 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 1, delay: 0.5 }}
                     />
                     <span className="absolute inset-0 flex items-center justify-center text-xs font-bold">
-                        {user.xp}/{user.xpToNextLevel} XP
+                    {xp}/{xpToNextLevel} XP
                     </span>
                 </div>
                 <motion.button 
@@ -109,7 +89,7 @@ export default function Profile() {
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ repeat: Infinity, duration: 2 }}
                     >
-                        {user.blippTokens}
+                        {user?.blippTokens || 0}
                     </motion.span>
                     <span>Blipp Tokens</span>
                 </div>
@@ -122,19 +102,19 @@ export default function Profile() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="w-full max-w-md bg-gray-800 text-white rounded-lg shadow-lg p-6 text-center"
             >
-                <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">
+                <h2 className="text-2xl font-bold mb-4 flex items-center">
                     <Gift className="w-6 h-6 mr-2 text-yellow-400" />
                     Daily Bonus
                 </h2>
-                <p className="text-lg mb-2">Streak: {user.dailyBonus.streak} Days 🔥</p>
-                <p className="text-lg mb-4">Next Reward: {user.dailyBonus.nextReward}</p>
+                <p className="text-lg mb-2">Streak: {user?.dailyBonus.streak} Days 🔥</p>
+                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus.nextReward}</p>
                 <motion.button
-                    className={`py-2 px-6 rounded-full font-bold ${user.dailyBonus.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
-                    disabled={!user.dailyBonus.available}
-                    whileHover={user.dailyBonus.available ? { scale: 1.05 } : {}}
-                    whileTap={user.dailyBonus.available ? { scale: 0.95 } : {}}
+                    className={`py-2 px-6 rounded-full font-bold ${user?.dailyBonus.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
+                    disabled={!user?.dailyBonus.available}
+                    whileHover={user?.dailyBonus.available ? { scale: 1.05 } : {}}
+                    whileTap={user?.dailyBonus.available ? { scale: 0.95 } : {}}
                 >
-                    {user.dailyBonus.available ? '🎁 Claim Daily Bonus' : '⏳ Come Back Tomorrow'}
+                    {user?.dailyBonus.available ? '🎁 Claim Daily Bonus' : '⏳ Come Back Tomorrow'}
                 </motion.button>
             </motion.div>
 
@@ -150,7 +130,7 @@ export default function Profile() {
                     Achievements
                 </h2>
                 <div className="flex flex-col space-y-4">
-                    {user.achievements.map((achievement, index) => (
+                    {user?.achievements.map((achievement:any, index:number) => (
                         <motion.div 
                             key={index} 
                             className="flex items-center bg-gray-700 p-4 rounded-lg"
@@ -210,19 +190,19 @@ export default function Profile() {
                             exit={{ opacity: 0, x: -50 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <span className="text-5xl mr-4">{user.badges[currentBadgeIndex].icon}</span>
-                            <span className="text-xl font-semibold">{user.badges[currentBadgeIndex].title}</span>
+                            <span className="text-5xl mr-4">{user?.badges[currentBadgeIndex].icon}</span>
+                            <span className="text-xl font-semibold">{user?.badges[currentBadgeIndex].title}</span>
                         </motion.div>
                     </AnimatePresence>
                     <button 
                         className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 rounded-full p-2"
-                        onClick={() => setCurrentBadgeIndex((prevIndex) => (prevIndex - 1 + user.badges.length) % user.badges.length)}
+                        onClick={() => setCurrentBadgeIndex((prevIndex) => (prevIndex - 1 + user?.badges.length) % user?.badges.length)}
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </button>
                     <button 
                         className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 rounded-full p-2"
-                        onClick={() => setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user.badges.length)}
+                        onClick={() => setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user?.badges.length)}
                     >
                         <ChevronRight className="w-6 h-6" />
                     </button>
