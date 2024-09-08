@@ -1,6 +1,8 @@
 import { initUtils } from '@telegram-apps/sdk';
 import React, { useState, useEffect, createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import WebApp from "@twa-dev/sdk";
+
 
 interface ProviderProps{
     initData:string;
@@ -87,7 +89,6 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
     useEffect(() => {
         const initWebApp = async () => {
             if (typeof window !== 'undefined') {
-              const WebApp = (await import('@twa-dev/sdk')).default;
               console.log("WebApp: ", WebApp.initDataUnsafe);
               WebApp.ready();
               setInitData(WebApp.initData);
