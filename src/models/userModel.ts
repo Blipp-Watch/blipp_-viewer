@@ -1,4 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+
+interface IUser extends Document {
+    last_name: string;
+    username: string;
+    language_code: string;
+    name: string;
+    level: number;
+    xp: number;
+    xpToNextLevel: number;
+    badges: typeof BadgeSchema[];
+    avatar: string;
+    blippTokens: number;
+    achievements: typeof AchievementSchema[];
+    dailyBonus: typeof DailyBonusSchema;
+  }
 
 const BadgeSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -36,7 +51,7 @@ const UserSchema = new mongoose.Schema({
   dailyBonus: DailyBonusSchema, // Embedded schema for daily bonus
 });
 
-// Create the User model
-const User = mongoose.model('User', UserSchema);
+// Check if the model already exists before defining it
+const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;

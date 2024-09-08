@@ -106,8 +106,8 @@ export default function Profile() {
                     <Gift className="w-6 h-6 mr-2 text-yellow-400" />
                     Daily Bonus
                 </h2>
-                <p className="text-lg mb-2">Streak: {user?.dailyBonus.streak} Days 🔥</p>
-                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus.nextReward}</p>
+                <p className="text-lg mb-2">Streak: {user?.dailyBonus.streak || 0} Days 🔥</p>
+                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus.nextReward }</p>
                 <motion.button
                     className={`py-2 px-6 rounded-full font-bold ${user?.dailyBonus.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
                     disabled={!user?.dailyBonus.available}
