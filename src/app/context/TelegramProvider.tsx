@@ -176,7 +176,7 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
               WebApp.ready();
               setInitData(WebApp.initData);
               let userUnsafeData = WebApp.initDataUnsafe.user;
-              setUserId(user?.id.toString() || '');
+              setUserId(user?.id?.toString() || '');
               setStartParam(WebApp.initDataUnsafe.start_param || '');
               console.log(WebApp.initDataUnsafe);
 

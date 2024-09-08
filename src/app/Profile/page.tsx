@@ -18,11 +18,14 @@ export default function Profile() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user?.badges.length)
-        }, 3000)
+            if (user?.badges && user.badges.length > 0) {
+                setCurrentBadgeIndex((prevIndex) => (prevIndex + 1) % user.badges.length);
+            }
+        }, 3000);
 
-        return () => clearInterval(interval)
-    }, [user?.badges?.length])
+        return () => clearInterval(interval);
+    }, [user]);
+
 
     const handleClaimRewards = () => {
         setShowReward(true)
@@ -106,8 +109,8 @@ export default function Profile() {
                     <Gift className="w-6 h-6 mr-2 text-yellow-400" />
                     Daily Bonus
                 </h2>
-                <p className="text-lg mb-2">Streak: {user?.dailyBonus?.streak} Days 🔥</p>
-                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus?.nextReward }</p>
+                <p className="text-lg mb-2">Streak: {user?.dailyBonus?.streak || 0} Days 🔥</p>
+                <p className="text-lg mb-4">Next Reward: {user?.dailyBonus?.nextReward || 'N/A'}</p>
                 <motion.button
                     className={`py-2 px-6 rounded-full font-bold ${user?.dailyBonus?.available ? 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600' : 'bg-gray-600 cursor-not-allowed'} text-white transition-all duration-300 transform hover:scale-105`}
                     disabled={!user?.dailyBonus?.available}
@@ -130,7 +133,7 @@ export default function Profile() {
                     Achievements
                 </h2>
                 <div className="flex flex-col space-y-4">
-                    {user?.achievements?.map((achievement:any, index:number) => (
+                    {user?.achievements?.length > 0 ? ( user?.achievements?.map((achievement:any, index:number) => (
                         <motion.div 
                             key={index} 
                             className="flex items-center bg-gray-700 p-4 rounded-lg"
@@ -165,35 +168,50 @@ export default function Profile() {
                                 )}
                             </div>
                         </motion.div>
-                    ))}
+                    ))): (
+                        <li>No achievements yet.</li>
+                    )
+                }
                 </div>
             </motion.div>
 
             {/* Badges Section */}
             <motion.div 
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="w-full max-w-md bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-24"
-            >
-                <h2 className="text-2xl font-bold mb-4 flex items-center">
-                    <Star className="w-6 h-6 mr-2 text-yellow-400" />
-                    Badges
-                </h2>
-                <div className="relative h-24 overflow-hidden">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={currentBadgeIndex}
-                            className="flex items-center justify-center h-full"
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -50 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <span className="text-5xl mr-4">{user?.badges[currentBadgeIndex].icon}</span>
-                            <span className="text-xl font-semibold">{user?.badges[currentBadgeIndex].title}</span>
-                        </motion.div>
-                    </AnimatePresence>
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: 0.6 }}
+    className="w-full max-w-md bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-24"
+>
+    <h2 className="text-2xl font-bold mb-4 flex items-center">
+        <Star className="w-6 h-6 mr-2 text-yellow-400" />
+        Badges
+    </h2>
+    <div className="relative h-24 overflow-hidden">
+        <AnimatePresence mode="wait">
+            {user?.badges && user.badges.length > 0 && currentBadgeIndex < user.badges.length ? (
+                <motion.div
+                    key={currentBadgeIndex}
+                    className="flex items-center justify-center h-full"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <span className="text-5xl mr-4">{user.badges[currentBadgeIndex].icon}</span>
+                    <span className="text-xl font-semibold">{user.badges[currentBadgeIndex].title}</span>
+                </motion.div>
+            ) : (
+                <motion.div
+                    className="flex items-center justify-center h-full"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <span className="text-xl font-semibold">No badges available</span>
+                </motion.div>
+            )}
+        </AnimatePresence>
                     <button 
                         className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 rounded-full p-2"
                         onClick={() => setCurrentBadgeIndex((prevIndex) => (prevIndex - 1 + user?.badges.length) % user?.badges.length)}
