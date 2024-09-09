@@ -176,23 +176,23 @@ export const TelegramContextProvider: React.FC<{ children: React.ReactNode }> = 
               WebApp.ready();
               setInitData(WebApp.initData);
               let userUnsafeData = WebApp.initDataUnsafe.user;
-              setUserId(user?.id?.toString() || '');
+              setUserId(userUnsafeData?.id.toString() || '');
               setStartParam(WebApp.initDataUnsafe.start_param || '');
               console.log(WebApp.initDataUnsafe);
 
             if (userUnsafeData && !isDataSaved) {
                 const userData = {
-                    user_id: user.id,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    username: user.username,
-                    language_code: user.language_code,
-                    name: user.username,
+                    user_id: userUnsafeData.id,
+                    first_name: userUnsafeData.first_name,
+                    last_name: userUnsafeData.last_name,
+                    username: userUnsafeData.username,
+                    language_code: userUnsafeData.language_code,
+                    name: userUnsafeData.username,
                     level: 1,
                     xp: 0,
                     xpToNextLevel: 1000,
                     badges: [],
-                    avatar: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Buddy',
+                    avatar: userUnsafeData.photo_url || 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Buddy',
                     blippTokens: 0,
                     achievements: [],
                     dailyBonus: { streak: 0, nextReward: '', available: false },
