@@ -4,6 +4,7 @@ import "./globals.css";
 import BottomTabNavigator from "./components/BottomTabNav";
 import { TelegramContextProvider } from "./context/TelegramProvider";
 import { VideoContextProvider } from "./context/videoContext";
+import { QuestsProvider } from "./context/QuestsProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,12 @@ export default function RootLayout({
       <body className={inter.className}>
       <TelegramContextProvider>
       <VideoContextProvider>
+        <QuestsProvider>
           {children}
           <div>
             <BottomTabNavigator />
           </div>
+          </QuestsProvider>
         </VideoContextProvider>
         </TelegramContextProvider>
       </body>

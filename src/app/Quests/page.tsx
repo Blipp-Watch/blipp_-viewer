@@ -1,43 +1,46 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Star, Trophy, Share2, Video, UserPlus, Zap, ChevronUp, ChevronDown } from 'lucide-react'
 import confetti from 'canvas-confetti'
+import { QuestsContext, Quest } from '../context/QuestsProvider'
+
 
 export default function Quests() {
-    const [quests, setQuests] = useState([
-        {
-            id: 1,
-            title: "Watch 3 Videos",
-            description: "Earn 50 points by enjoying 3 awesome videos today!",
-            points: 50,
-            completed: false,
-            progress: 2,
-            total: 3,
-            icon: <Video className="w-6 h-6 text-purple-400" />,
-        },
-        {
-            id: 2,
-            title: "Refer a Friend",
-            description: "Earn 100 points by inviting a friend to join Blipp.",
-            points: 100,
-            completed: false,
-            progress: 0,
-            total: 1,
-            icon: <UserPlus className="w-6 h-6 text-green-400" />,
-        },
-        {
-            id: 3,
-            title: "Share on Social Media",
-            description: "Earn 30 points by sharing Blipp with your followers.",
-            points: 30,
-            completed: false,
-            progress: 0,
-            total: 1,
-            icon: <Share2 className="w-6 h-6 text-blue-400" />,
-        },
-    ])
+    const quests = useContext<Quest[]>(QuestsContext)
+    // const [quests, setQuests] = useState([
+    //     {
+    //         id: 1,
+    //         title: "Watch 3 Videos",
+    //         description: "Earn 50 points by enjoying 3 awesome videos today!",
+    //         points: 50,
+    //         completed: false,
+    //         progress: 2,
+    //         total: 3,
+    //         icon: <Video className="w-6 h-6 text-purple-400" />,
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "Refer a Friend",
+    //         description: "Earn 100 points by inviting a friend to join Blipp.",
+    //         points: 100,
+    //         completed: false,
+    //         progress: 0,
+    //         total: 1,
+    //         icon: <UserPlus className="w-6 h-6 text-green-400" />,
+    //     },
+    //     {
+    //         id: 3,
+    //         title: "Share on Social Media",
+    //         description: "Earn 30 points by sharing Blipp with your followers.",
+    //         points: 30,
+    //         completed: false,
+    //         progress: 0,
+    //         total: 1,
+    //         icon: <Share2 className="w-6 h-6 text-blue-400" />,
+    //     },
+    // ])
 
     const [streak, setStreak] = useState(3)
     const [showReward, setShowReward] = useState(false)
@@ -91,7 +94,7 @@ export default function Quests() {
                 <AnimatePresence>
                     {quests.map((quest, index) => (
                         <motion.div
-                            key={quest.id}
+                            key={quest._id}
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -50 }}
@@ -103,7 +106,7 @@ export default function Quests() {
                                     {quest.icon}
                                     <span className="ml-2">{quest.title}</span>
                                 </h2>
-                                {quest.completed && (
+                                {questStatus.completed && (
                                     <Trophy className="w-6 h-6 text-yellow-400" />
                                 )}
                             </div>
@@ -113,7 +116,7 @@ export default function Quests() {
                                 <motion.div 
                                     className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full"
                                     initial={{ width: 0 }}
-                                    animate={{ width: `${(quest.progress / quest.total) * 100}%` }}
+                                    animate={{ width: `${(questStatus.progress / questStatus.total) * 100}%` }}
                                     transition={{ duration: 0.5 }}
                                 />
                             </div>
@@ -121,17 +124,17 @@ export default function Quests() {
                             <div className="flex justify-between items-center">
                                 <span className="text-lg font-semibold flex items-center">
                                     <Star className="w-5 h-5 text-yellow-400 mr-1" />
-                                    {quest.points} Points
+                                    {questStatus.points} Points
                                 </span>
                                 <button
                                     onClick={() => handleQuestProgress(quest.id)}
                                     className={`py-2 px-4 rounded-full font-bold ${
-                                        quest.completed 
+                                        questStatus.completed 
                                             ? 'bg-green-600 hover:bg-green-700' 
                                             : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                                     } text-white transition-all duration-300 transform hover:scale-105 flex items-center`}
                                 >
-                                    {quest.completed ? (
+                                    {questStatus.completed ? (
                                         <>
                                             <Trophy className="w-5 h-5 mr-2" />
                                             Completed
@@ -139,7 +142,7 @@ export default function Quests() {
                                     ) : (
                                         <>
                                             <Zap className="w-5 h-5 mr-2" />
-                                            {quest.progress < quest.total ? 'Continue' : 'Start'}
+                                            {questStatus.progress < questStatus.total ? 'Continue' : 'Start'}
                                         </>
                                     )}
                                 </button>
